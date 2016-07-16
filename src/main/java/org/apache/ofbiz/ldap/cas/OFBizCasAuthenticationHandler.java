@@ -17,7 +17,7 @@
  * under the License.
  *******************************************************************************/
 
-package org.ofbiz.ldap.cas;
+package org.apache.ofbiz.ldap.cas;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,9 +34,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.ldap.commons.AbstractOFBizAuthenticationHandler;
-import org.ofbiz.ldap.commons.InterfaceOFBizAuthenticationHandler;
+import org.apache.ofbiz.base.util.UtilXml;
+import org.apache.ofbiz.ldap.commons.AbstractOFBizAuthenticationHandler;
+import org.apache.ofbiz.ldap.commons.InterfaceOFBizAuthenticationHandler;
 import org.w3c.dom.Element;
 
 /**
@@ -160,7 +160,7 @@ public final class OFBizCasAuthenticationHandler extends AbstractOFBizAuthentica
     @Override
     public SearchResult getLdapSearchResult(String username, String password,
             Element rootElement, boolean bindRequired) throws NamingException {
-        String className = UtilXml.childElementValue(rootElement, "CasLdapHandler", "org.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
+        String className = UtilXml.childElementValue(rootElement, "CasLdapHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
         try {
             Class<?> handlerClass = Class.forName(className);
             InterfaceOFBizAuthenticationHandler casLdapHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.newInstance();

@@ -17,9 +17,10 @@
  * under the License.
  *******************************************************************************/
 
-package org.ofbiz.ldap.openldap;
+package org.apache.ofbiz.ldap.activedirectory;
 
 import java.util.Hashtable;
+
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -27,44 +28,58 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+
 import org.jasig.cas.util.LdapUtils;
-import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.ldap.commons.AbstractOFBizAuthenticationHandler;
+import org.apache.ofbiz.base.util.UtilXml;
+import org.apache.ofbiz.ldap.commons.AbstractOFBizAuthenticationHandler;
 import org.w3c.dom.Element;
 
+
 /**
- * The OFBiz LDAP Authentication Handler.<p>
+ * The OFBiz ActiveDirectory Authentication Handler.<p>
  *
  * The ACL of a user is still controlled by OFBiz.
  *
  */
-public final class OFBizLdapAuthenticationHandler extends AbstractOFBizAuthenticationHandler {
+public final class OFBizActiveDirectoryAuthenticationHandler extends AbstractOFBizAuthenticationHandler {
 
     /**
      * Public constructor, initializes some required member variables.<p>
      */
-    public OFBizLdapAuthenticationHandler() {
+    public OFBizActiveDirectoryAuthenticationHandler() {
 
     }
 
     @Override
-    public SearchResult getLdapSearchResult(String username, String password, Element rootElement, boolean bindRequired) throws NamingException {
+    public SearchResult getLdapSearchResult(String username, String password,
+            Element rootElement, boolean bindRequired) throws NamingException {
         DirContext ctx = null;
         SearchResult result = null;
         String ldapURL = UtilXml.childElementValue(rootElement, "URL", "ldap://localhost:389");
         String authenType = UtilXml.childElementValue(rootElement, "AuthenType", "simple");
+        String searchType = UtilXml.childElementValue(rootElement, "SearchType", "");
         String baseDN = UtilXml.childElementValue(rootElement, "BaseDN");
         Hashtable<String, String> env = new Hashtable<String, String>();
         env.put(Context.INITIAL_CONTEXT_FACTORY,"com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, ldapURL);
-        env.put(Context.SECURITY_AUTHENTICATION, "none");
+        if (searchType == null || searchType.trim().equals("")) {
+            env.put(Context.SECURITY_AUTHENTICATION, "none");
+        } else if (searchType.trim().equals("login")) {
+            env.put(Context.SECURITY_AUTHENTICATION, authenType);
+            // specify the username for search
+            String userDNForSearch = UtilXml.childElementValue(rootElement, "UserDNForSearch");
+            env.put(Context.SECURITY_PRINCIPAL, userDNForSearch);
+            // specify the password for search
+            String passwordForSearch = UtilXml.childElementValue(rootElement, "PasswordForSearch");
+            env.put(Context.SECURITY_CREDENTIALS, passwordForSearch);
+        }
         try {
             ctx = new InitialDirContext(env);
             SearchControls controls = new SearchControls();
             // ldap search timeout
-            controls.setTimeLimit(1000); //TODO maybe properties...
+            controls.setTimeLimit(1000);
             // ldap search count
-            controls.setCountLimit(2);  //TODO maybe properties...
+            controls.setCountLimit(2);
             // ldap search scope
             String sub = UtilXml.childElementValue(rootElement, "Scope", "sub").toLowerCase().trim();
             if (sub.equals("sub")) {

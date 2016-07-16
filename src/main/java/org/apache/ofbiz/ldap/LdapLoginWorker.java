@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.ofbiz.ldap;
+package org.apache.ofbiz.ldap;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,11 +29,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.ldap.commons.InterfaceOFBizAuthenticationHandler;
-import org.ofbiz.webapp.control.LoginWorker;
-import org.ofbiz.webapp.control.RequestHandler;
+import org.apache.ofbiz.base.util.*;
+import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.ldap.commons.InterfaceOFBizAuthenticationHandler;
+import org.apache.ofbiz.webapp.control.LoginWorker;
+import org.apache.ofbiz.webapp.control.RequestHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -66,7 +66,7 @@ public class LdapLoginWorker extends LoginWorker {
             Element rootElement = getRootElement(request);
             boolean hasLdapLoggedOut = false;
             if (rootElement != null) {
-                String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
+                String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
                 try {
                     Class<?> handlerClass = Class.forName(className);
                     InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.newInstance();
@@ -121,7 +121,7 @@ public class LdapLoginWorker extends LoginWorker {
         Element rootElement = getRootElement(request);
         String result = "error";
         if (rootElement != null) {
-            String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
+            String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
             try {
                 Class<?> handlerClass = Class.forName(className);
                 InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.newInstance();
@@ -185,7 +185,7 @@ public class LdapLoginWorker extends LoginWorker {
 
         String result = "error";
         if (rootElement != null) {
-            String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
+            String className = UtilXml.childElementValue(rootElement, "AuthenticationHandler", "org.apache.ofbiz.ldap.openldap.OFBizLdapAuthenticationHandler");
             try {
                 Class<?> handlerClass = Class.forName(className);
                 InterfaceOFBizAuthenticationHandler authenticationHandler = (InterfaceOFBizAuthenticationHandler) handlerClass.newInstance();

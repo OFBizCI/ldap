@@ -17,7 +17,7 @@
  * under the License.
  *******************************************************************************/
 
-package org.ofbiz.ldap.commons;
+package org.apache.ofbiz.ldap.commons;
 
 import javax.naming.NamingException;
 import javax.naming.directory.SearchResult;
